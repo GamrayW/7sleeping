@@ -17,3 +17,7 @@ Once a quizz started, a button *7sleeping* should appear, once clicked the bot w
 ## Debug
 
 If there's bugs, send me the javascript console output and the quizz url
+
+## Disclaimer
+
+ban = not my fault
