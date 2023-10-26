@@ -11,7 +11,7 @@
 
 Once a quizz started, a button *7sleeping* should appear, once clicked the bot will solve the questions
 
-![./demo.gif]
+![](./demo.gif)
 
 
 ## Debug
