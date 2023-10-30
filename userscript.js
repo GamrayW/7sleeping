@@ -9,13 +9,100 @@
 // @grant               none
 // ==/UserScript==
 
+const menu7Sleeping = `\
+<div style="padding-right: 80px;">
+    <button id="7sleeping-dropdown" class="MuiButtonBase-root-162 MuiButton-root-135 button MuiButton-containedPrimary-144" 
+            style="background-color: #FF3364;
+                   color: #FFFFFF;
+                   border: 0;
+                   cursor: pointer;
+                   padding: 5px 16px 7px 16px;
+                   min-width: 11.25rem;
+                   min-height: 1.8rem;
+                   font-family: sofia-pro, Arial, sans-serif;
+                   border-bottom-left-radius: 6px;
+                   border-bottom-right-radius: 6px;
+                   border-top-left-radius: 6px;
+                   border-top-right-radius: 6px">
+        <span>7sleeping</span>
+    </button>
+    <div id="dropdown-content" 
+          style="background-color: #FF3364;
+                 display: none;
+                 color: #FFFFFF;
+                 border: 0;
+                 padding: 5px 16px 7px 16px;
+                 min-width: 11.25rem;
+                 min-height: 1.8rem;
+                 font-family: sofia-pro, Arial, sans-serif;
+                 border-bottom-left-radius: 6px;
+                 border-bottom-right-radius: 6px;">
+        <ul>
+            <li>
+                Errors (%)
+                <input id="7sleeping-errors" class="dropdown-sub-buttons" type="number" value="15" max="100" 
+                        style="width: 2.5rem;
+                               -webkit-appearance: none;
+                               -moz-appearance: textfield;
+                               appearance: textfield;
+                               margin-left: 17px;
+                               text-align: center;
+                               float: right;
+                               background-color: #e72f5b;
+                               color: #ffffff;
+                               border: none;
+                               border-radius: 10px;"/>
+            </li>
+            <li style="margin-top: 5px;">
+                Max delay  (S)
+                <input id="7sleeping-delay" class="dropdown-sub-buttons" type="number" value="2" max="30" 
+                        style="width: 2.5rem;
+                               -webkit-appearance: none;
+                               -moz-appearance: textfield;
+                               appearance: textfield;
+                               margin-left: 20px;
+                               text-align: center;
+                               float: right;
+                               background-color: #e72f5b;
+                               color: #ffffff;
+                               border: none;
+                               border-radius: 10px;"/>
+            </li>
+            <li style="margin-top: 15px;
+                       display: flex;
+                       justify-content: center;
+                       align-items: center;">
+                <span id="time-to-sleep" class="dropdown-sub-buttons" 
+                      style="background-color: #e72f5b;
+                             cursor: pointer;
+                             width: 5rem;
+                             color: #ffffff;
+                             border: none;
+                             border-radius: 10px;
+                             text-align: center;
+                             padding-bottom: 5px;
+                             font-size: 18px;">
+                         Start
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>`;
+
+
+const colorNotEnabled = "#FF3364";
+const colorNotEnabledDark = "#e72f5b";
+const colorEnabled = "#76DED7";
+const colorEnabledDark = "#6dc8c2";
+
 (function() {
     'use strict';
 
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
-    const enableButtonHtml = '<div style="padding-right: 80px;"><button id="time-to-sleep" class="MuiButtonBase-root-162 MuiButton-root-135 button MuiButton-containedPrimary-144"><span>7sleeping</span></button></div>'
     let enabled = false
+    let errors = false
+    let time = 2
 
 
     let allQuizzTypes = [ "fill", "grammar", "choice" ]
@@ -136,39 +223,99 @@
 
     async function once_loaded() {
         while (true) {
-            let our_button = document.getElementById('time-to-sleep')
-            if (our_button == undefined && document.getElementsByClassName("quiz__container") != undefined) {
+            let dropdownButton = document.getElementById('7sleeping-dropdown')
+            if (dropdownButton == undefined && document.getElementsByClassName("quiz__container") != undefined) {
                 console.log("Found a quizz !")
                 if (document.getElementsByClassName("stepper")[0] != undefined) {
-                    document.getElementsByClassName("stepper")[0].innerHTML += enableButtonHtml
+                    document.getElementsByClassName("stepper")[0].innerHTML += menu7Sleeping
 
-                    our_button = document.getElementById('time-to-sleep')
+                    dropdownButton = document.getElementById('7sleeping-dropdown')
+                    dropdownButton.addEventListener ("click", invertDropdown, false);
 
-                    our_button.style.backgroundColor = "#FF3364"
-                    our_button.style.color = "#FFFFFF"
-                    our_button.style.border = 0
-                    our_button.style.cursor = "pointer"
-                    our_button.style.padding = "5px 16px 7px 16px"
-                    our_button.style.minWidth = "11.25rem"
-                    our_button.style.minHeight = "1.8rem"
-                    our_button.style.fontFamily = '"sofia-pro", "Arial", sans-serif'
-                    our_button.style.borderRadius = "6px"
+                    let startButton = document.getElementById("time-to-sleep")
+                    startButton.addEventListener ("click", start7Sleeping, false);
 
-                    our_button.addEventListener ("click", click7Sleeping, false);
+                    let errorsPercent = document.getElementById("7sleeping-errors");
+                    errorsPercent.addEventListener("input", function () {
+                        if (errorsPercent.value == "") {
+                            errors = 0
+                            console.log("[DEBUG] - New error value: ", errors)
+                            return
+                        } 
+
+                        let value = parseInt(errorsPercent.value)
+                        if (value > 100) {
+                            errors = 100
+                        } else if (value < 0) {
+                            errors = 0
+                        } else {
+                            errors = value
+                        }
+                        console.log("[DEBUG] - New error value: ", errors)
+                    })
+
+
+                    let maxDelay = document.getElementById("7sleeping-delay");
+                    maxDelay.addEventListener("input", function () {
+                        if (maxDelay.value == "") {
+                            delay = 2
+                            console.log("[DEBUG] - New delay value: ", delay)
+                            return
+                        } 
+
+                        let value = parseInt(maxDelay.value)
+                        if (value > 30) {
+                            delay = 30
+                        } else if (value < 2) {
+                            delay = 2
+                        } else {
+                            delay = value
+                        }
+                        console.log("[DEBUG] - New delay value: ", delay)
+                    })
                 }
             }
             await sleep(1000)
         }
     }
 
-    function click7Sleeping() {
-        let button = document.getElementById('time-to-sleep')
+    function invertDropdown() {
+        let button = document.getElementById('7sleeping-dropdown')
+        let dropdown = document.getElementById('dropdown-content')
+
+        if (dropdown.style.display == "none") {
+            button.style.borderBottomRightRadius = "0px"
+            button.style.borderBottomLeftRadius = "0px"
+            dropdown.style.display = "flex";
+        } else {
+            button.style.borderBottomRightRadius = "6px"
+            button.style.borderBottomLeftRadius = "6px"
+            dropdown.style.display = "none"
+        }
+    }
+
+    function start7Sleeping() {
+        let button = document.getElementById('7sleeping-dropdown')
+        let dropdown = document.getElementById('dropdown-content')
+        let subButtons = document.getElementsByClassName('dropdown-sub-buttons')
+
         enabled = !enabled
         if (enabled) {
-            button.style.backgroundColor = "#76DED7"
+            button.style.backgroundColor = colorEnabled
+            dropdown.style.backgroundColor = colorEnabled
+
+            for (var i = subButtons.length - 1; i >= 0; i--) {
+                subButtons[i].style.backgroundColor = colorEnabledDark
+            }
+
             solveCurrentQuizz()
         } else {
-            button.style.backgroundColor = "#FF3364"
+            button.style.backgroundColor = colorNotEnabled
+            dropdown.style.backgroundColor = colorNotEnabled
+
+            for (var i = subButtons.length - 1; i >= 0; i--) {
+                subButtons[i].style.backgroundColor = colorNotEnabledDark
+            }
         }
     }
 })();
