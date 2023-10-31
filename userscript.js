@@ -101,7 +101,7 @@ const colorEnabledDark = "#6dc8c2";
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
     let enabled = false
-    let errors = false
+    let errors = 15
     let time = 2
 
 
@@ -156,11 +156,19 @@ const colorEnabledDark = "#6dc8c2";
         // extracting the submit button
         let submit = quizz_form.childNodes[2].getElementsByTagName("button")[0]
 
+        let shouldFail = randint(0, 100) < errors ? true : false
+        console.log("[DEBUG] - Should fail: ", shouldFail)
+
         if (quizzType == "fill") {
             let input_field = quizz_form.getElementsByTagName("input")[0]
 
             let reactKey = Object.keys(input_field)[0]
 
+
+            if (shouldFail) {
+                answer = "carrots"
+            }
+            
             input_field[reactKey].memoizedProps.onChange({currentTarget: {value: answer}})
 
             submit.classList.remove("Mui-disabled")
@@ -168,16 +176,24 @@ const colorEnabledDark = "#6dc8c2";
         } else if (quizzType == "grammar" || quizzType == "choice") {
             let choices = quizz_form.childNodes[0].childNodes
 
-            let correct = false
+            let clickedChoice = false
             choices.forEach(function(choice) {
                 let value = unifyString(choice.childNodes[0].innerHTML)
                 console.log("[DEBUG] - Choice: " + value)
                 if (value == answer) {
-                    choice.click()
-                    correct = true
-                }})
+                    if (!shouldFail) {
+                        choice.click()
+                        clickedChoice = true
+                    } 
+                } else {
+                    if (shouldFail) {
+                        choice.click()
+                        clickedChoice = true
+                    }
+                }
+            })
 
-            if (correct == false) {
+            if (clickedChoice == false) {
                 console.log("[DEBUG] - Could not find the answer in the choices, exiting...")
                 return false
             }
@@ -196,7 +212,7 @@ const colorEnabledDark = "#6dc8c2";
             let quizzObject = getQuizzObject()
             if (quizzObject == undefined) {
                 console.log("Quizz ended !")
-                click7Sleeping()
+                start7Sleeping()
                 return false
             }
 
@@ -212,7 +228,7 @@ const colorEnabledDark = "#6dc8c2";
             let result = await submitAnswer(answer, quizzType)
             if (!result) {
                 console.log("[DEBUG] - Solve failed")
-                click7Sleeping()
+                start7Sleeping()
                 return false
             }
             await sleep(1500)
@@ -298,6 +314,10 @@ const colorEnabledDark = "#6dc8c2";
         let button = document.getElementById('7sleeping-dropdown')
         let dropdown = document.getElementById('dropdown-content')
         let subButtons = document.getElementsByClassName('dropdown-sub-buttons')
+
+        if (dropdown.style.display != "none") {
+            invertDropdown()
+        }
 
         enabled = !enabled
         if (enabled) {
