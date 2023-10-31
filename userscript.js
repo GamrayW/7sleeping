@@ -200,7 +200,7 @@ const colorEnabledDark = "#6dc8c2";
         }
 
         submit.click()  // validate
-        await sleep(randint(1000, 2500))
+        await sleep(randint(1000, delay))
         submit.click()  // continue
         return true
     }
