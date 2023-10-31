@@ -149,6 +149,7 @@ const colorEnabledDark = "#6dc8c2";
 
     // handles form submit
     async function submitAnswer(answer, quizzType) {
+        await sleep(randint(1000, delay*1000))
         // checking we're still in the quizz
         let quizz_form = document.getElementsByClassName("question__form")[0]
         if (quizz_form == undefined) { return false }
@@ -199,7 +200,7 @@ const colorEnabledDark = "#6dc8c2";
             }
         }
 
-        await sleep(randint(1000, delay*1000))
+        await sleep(randint(1000, 2000))
         submit.click()  // validate
         await sleep(randint(1000, 2000))
         submit.click()  // continue
