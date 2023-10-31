@@ -11,7 +11,7 @@
 
 const menu7Sleeping = `\
 <div style="padding-right: 80px;">
-    <button id="7sleeping-dropdown" class="MuiButtonBase-root-162 MuiButton-root-135 button MuiButton-containedPrimary-144" 
+    <button id="7sleeping-dropdown" class="MuiButtonBase-root-162 MuiButton-root-135 button MuiButton-containedPrimary-144"
             style="background-color: #FF3364;
                    color: #FFFFFF;
                    border: 0;
@@ -26,7 +26,7 @@ const menu7Sleeping = `\
                    border-top-right-radius: 6px">
         <span>7sleeping</span>
     </button>
-    <div id="dropdown-content" 
+    <div id="dropdown-content"
           style="background-color: #FF3364;
                  display: none;
                  color: #FFFFFF;
@@ -40,7 +40,7 @@ const menu7Sleeping = `\
         <ul>
             <li>
                 Errors (%)
-                <input id="7sleeping-errors" class="dropdown-sub-buttons" type="number" value="15" max="100" 
+                <input id="7sleeping-errors" class="dropdown-sub-buttons" type="number" value="15" max="100"
                         style="width: 2.5rem;
                                -webkit-appearance: none;
                                -moz-appearance: textfield;
@@ -55,7 +55,7 @@ const menu7Sleeping = `\
             </li>
             <li style="margin-top: 5px;">
                 Max delay  (S)
-                <input id="7sleeping-delay" class="dropdown-sub-buttons" type="number" value="2" max="30" 
+                <input id="7sleeping-delay" class="dropdown-sub-buttons" type="number" value="2" max="30"
                         style="width: 2.5rem;
                                -webkit-appearance: none;
                                -moz-appearance: textfield;
@@ -72,7 +72,7 @@ const menu7Sleeping = `\
                        display: flex;
                        justify-content: center;
                        align-items: center;">
-                <span id="time-to-sleep" class="dropdown-sub-buttons" 
+                <span id="time-to-sleep" class="dropdown-sub-buttons"
                       style="background-color: #e72f5b;
                              cursor: pointer;
                              width: 5rem;
@@ -102,7 +102,7 @@ const colorEnabledDark = "#6dc8c2";
 
     let enabled = false
     let errors = 15
-    let time = 2
+    let delay = 2
 
 
     let allQuizzTypes = [ "fill", "grammar", "choice" ]
@@ -168,7 +168,7 @@ const colorEnabledDark = "#6dc8c2";
             if (shouldFail) {
                 answer = "carrots"
             }
-            
+
             input_field[reactKey].memoizedProps.onChange({currentTarget: {value: answer}})
 
             submit.classList.remove("Mui-disabled")
@@ -184,7 +184,7 @@ const colorEnabledDark = "#6dc8c2";
                     if (!shouldFail) {
                         choice.click()
                         clickedChoice = true
-                    } 
+                    }
                 } else {
                     if (shouldFail) {
                         choice.click()
@@ -199,8 +199,9 @@ const colorEnabledDark = "#6dc8c2";
             }
         }
 
+        await sleep(randint(1000, delay*1000))
         submit.click()  // validate
-        await sleep(randint(1000, delay))
+        await sleep(randint(1000, 2000))
         submit.click()  // continue
         return true
     }
@@ -257,7 +258,7 @@ const colorEnabledDark = "#6dc8c2";
                             errors = 0
                             console.log("[DEBUG] - New error value: ", errors)
                             return
-                        } 
+                        }
 
                         let value = parseInt(errorsPercent.value)
                         if (value > 100) {
@@ -277,7 +278,7 @@ const colorEnabledDark = "#6dc8c2";
                             delay = 2
                             console.log("[DEBUG] - New delay value: ", delay)
                             return
-                        } 
+                        }
 
                         let value = parseInt(maxDelay.value)
                         if (value > 30) {
