@@ -163,7 +163,7 @@
                 console.log("Please answer yourself and restart after this fill question (answer: ", answer, ")")
                 document.getElementsByClassName("fill")[0].style = "color: pink;"
                 document.getElementsByClassName("fill")[0].innerHTML = "<u>" + answer + "</u>"
-                return undefined  // TEMP DEBUG, FIND OUT WHY IT'S NOT UPDATING THE INPUT
+                return true  // TEMP DEBUG, FIND OUT WHY IT'S NOT UPDATING THE INPUT
 
                 let input_field = quizz_form.getElementsByTagName("input")[0]
 
