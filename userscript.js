@@ -160,6 +160,9 @@ const colorEnabledDark = "#6dc8c2";
         console.log("[DEBUG] - Should fail: ", shouldFail)
 
         if (quizzType == "fill") {
+            console.log("Please answer yourself and restart after this fill question (answer: ", answer, ")")
+            return false  // TEMP DEBUG, FIND OUT WHY IT'S NOT UPDATING THE INPUT
+
             let input_field = quizz_form.getElementsByTagName("input")[0]
 
             let reactKey = Object.keys(input_field)[0]
