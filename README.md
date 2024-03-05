@@ -18,6 +18,10 @@ Once a quizz started, a button *7sleeping* should appear, once clicked the bot w
 
 If there's bugs, send me the javascript console output and the quizz url
 
+## Known Bugs
+
+- There's a bug on quizz when you need to complete phrase, as a temporary solve the answer is written is pink in the question, so you need to copy and paste it.
+
 ## Disclaimer
 
 ban = not my fault
