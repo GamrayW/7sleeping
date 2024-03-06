@@ -20,7 +20,7 @@ If there's bugs, send me the javascript console output and the quizz url
 
 ## Known Bugs
 
-- There's a bug on quizz when you need to complete phrase, as a temporary solve the answer is written is pink in the question, so you need to copy and paste it.
+- Sometimes the answer is "undefined". `answerOptions.answer[0].value = undefined` but `answerOptions.answer[0] = real answer`. Idk why and it happens very rarely so hard to replicate.
 
 ## Disclaimer
 
