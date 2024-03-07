@@ -110,7 +110,7 @@ const colorEnabledDark = "#6dc8c2";
     /* CUSTOM FUNCTIONS */
     function unifyString(str) {
         // removing spaces to avoid problems
-        str = str.toString()
+        str = str.toString()  // In case the answer is an int
         return str.trimEnd()
     }
 
