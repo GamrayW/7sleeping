@@ -162,7 +162,12 @@ const colorEnabledDark = "#6dc8c2";
 
         if (quizzType == "fill") {
             if (shouldFail) {
-                answer = "carrots"
+                let resp = await fetch('https://random-word-api.herokuapp.com/word').then((response)=>response.json())
+                if (resp[0] == undefined) {
+                    answer = "carrots"
+                } else {
+                    answer = resp[0]
+                }
             }
             document.querySelector(".MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputAdornedEnd.MuiOutlinedInput-inputAdornedEnd").focus();
             document.execCommand('insertText', false, answer);
