@@ -161,6 +161,9 @@ const colorEnabledDark = "#6dc8c2";
         console.log("[DEBUG] - Should fail: ", shouldFail)
 
         if (quizzType == "fill") {
+            if (shouldFail) {
+                answer = "carrots"
+            }
             document.querySelector(".MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputAdornedEnd.MuiOutlinedInput-inputAdornedEnd").focus();
             document.execCommand('insertText', false, answer);
 
