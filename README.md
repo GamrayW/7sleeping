@@ -55,6 +55,6 @@ When the render function will be executed, the client will be able to retrieve t
 As we can see, using `return`, we are able to go up the tree and retrieve the initial object SecretClass from the HTML h2 tag.
 
 
-7sleeping uses a similar approach, retrieving  ̀quizz_div.memoizedProps.return.[...].memoizedProps.answerOptions`, return is used to go up the object tree until finding the key 'answerOptions', which contain the correct answer.
+7sleeping uses a similar approach, retrieving `quizz_div.memoizedProps.return.[...].memoizedProps.answerOptions`, return is used to go up the object tree until finding the key 'answerOptions', which contain the correct answer.
 
 
