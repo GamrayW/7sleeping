@@ -5,8 +5,7 @@
 ## Installation
 
 - Get [this](https://www.tampermonkey.net/) extension on your browser
-- Once tampermonkey installed and loaded, click on the plugin icon and on "Create a new script..."
-- Paste the userscript.js in the code block, Ctrl+S and close
+- Click [here](https://github.com/GamrayW/7sleeping/raw/main/7sleeping.user.js), tampermonkey should recognize the script and install it.
 - Launch quizzes and go to sleep
 
 ## Demo
