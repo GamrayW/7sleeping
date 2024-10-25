@@ -147,7 +147,7 @@ const colorEnabledDark = "#6dc8c2";
     }
 
     function getCurrentAnswer(quizz) {
-        if (getQuizzType(quizzObject) == "matching" || getQuizzType(quizzObject) == "listening") {
+        if (getQuizzType(quizz) == "matching" || getQuizzType(quizz) == "listening") {
             return quizz.answerOptions.answer
         }
         return unifyString(quizz.answerOptions.answer[0].value)
