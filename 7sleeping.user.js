@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name                7sleeping
 // @namespace           .
-// @version             0.5
+// @version             0.8
 // @description         Automating solve of 7speaking tests
 // @updateURL           https://raw.githubusercontent.com/GamrayW/7sleeping/main/7sleeping.user.js
 // @downloadURL         https://raw.githubusercontent.com/GamrayW/7sleeping/main/7sleeping.user.js
