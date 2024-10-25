@@ -107,7 +107,8 @@ const colorEnabledDark = "#6dc8c2";
     let delay = 2
 
 
-    let allQuizzTypes = ["fill", "grammar", "choice", "matching", "listening"]
+    let allQuizzTypes = ["fill", "grammar", "choice", "matching", "listening", "TOEIC"]
+    let isQuizzTOEIC = false
 
     /* CUSTOM FUNCTIONS */
     function unifyString(str) {
@@ -123,8 +124,20 @@ const colorEnabledDark = "#6dc8c2";
 
     /* QUIZZ RELATED FUNCTIONS */
     function getQuizzObject() {
-        let question_div = document.querySelector(".question")
-        if (question_div == undefined) { return undefined }
+        let question_div = isQuizzTOEIC ? document.querySelector(".question_variant") : document.querySelector(".question")
+        if (question_div == undefined) {
+            // either the quiz is truly stopped or we're in toeic practice and we enter a new quizz varian
+            let test_div =  document.querySelector(".ExamsAndTests__questionContainer")
+            if (test_div == undefined) { return undefined }
+
+            let button = document.querySelector(".ExamsAndTests__questionContainer").childNodes[2].childNodes[1]
+            if (button == undefined) {
+                button = document.querySelector(".ExamsAndTests__questionContainer").childNodes[2].childNodes[0]
+            }
+            button.click()
+            sleep(1)
+            return getQuizzObject()  // re-trying to get the quizz
+        }
 
         let reactKey = Object.keys(question_div)[0]
         console.log("[DEBUG] - ", reactKey);
@@ -132,35 +145,49 @@ const colorEnabledDark = "#6dc8c2";
         let curr_kc = question_div[reactKey]
 
         // we go down in the object until we find "answerOptions" in the attributes
-        while (curr_kc.memoizedProps.answerOptions == undefined) {
+        while (curr_kc.memoizedProps.answerOptions == undefined && curr_kc.memoizedProps.question == undefined ) {
             curr_kc = curr_kc.return
             if (curr_kc == undefined) {
                 return undefined
             }
         }
-        return curr_kc.memoizedProps
+        return isQuizzTOEIC ? curr_kc.memoizedProps.question : curr_kc.memoizedProps
     }
 
     // simply extract quizz type from quizz object
     function getQuizzType(quizz) {
-        return quizz.variant
+        return isQuizzTOEIC ? "TOEIC" : quizz.variant
     }
 
     function getCurrentAnswer(quizz) {
-        if (getQuizzType(quizz) == "matching" || getQuizzType(quizz) == "listening") {
+        if (getQuizzType(quizz) == "listening") {
+            return quizz.answerOptions.answer[0] - 1
+        }
+        if (getQuizzType(quizz) == "matching") {
             return quizz.answerOptions.answer
         }
+
+        if (getQuizzType(quizz) == "TOEIC") {
+            // "A" = 0, "B" = 1, "C" = 2...
+            return quizz.errorMessage.split('(')[1].split(')')[0].charCodeAt(0) - 65
+        }
+
         return unifyString(quizz.answerOptions.answer[0].value)
     }
 
     // handles form submit
     async function submitAnswer(answer, quizzType) {
         // checking we're still in the quizz
-        let quizz_form = document.getElementsByClassName("question__form")[0]
+        let quizz_form = document.getElementsByClassName(isQuizzTOEIC ? "ExamsAndTests__questionContainer" : "question__form")[0]
         if (quizz_form == undefined) { return false }
 
         // extracting the submit button
-        let submit = quizz_form.childNodes[2].getElementsByTagName("button")[0]
+        let submit = quizz_form.childNodes[2].getElementsByTagName("button")[isQuizzTOEIC ? 1 : 0]
+        if (submit == undefined) {
+            submit = quizz_form.childNodes[2].getElementsByTagName("button")[0]
+        }
+
+        if (submit == undefined) { return false };
 
         let shouldFail = randint(0, 100) < errors ? true : false
         console.log("[DEBUG] - Should fail: ", shouldFail)
@@ -210,7 +237,13 @@ const colorEnabledDark = "#6dc8c2";
             return false
         } else if (quizzType == "listening") {
             let choices = quizz_form.childNodes[0].childNodes[0].childNodes[1].childNodes
-            choices[answer[0] - 1].click()
+            choices[answer].click()
+            if (shouldFail) {
+                choices[1].click()  // small chance it does not really fail but eh
+            }
+        } else if (quizzType == "TOEIC") {
+            let choices = quizz_form.childNodes[1].childNodes[1].childNodes[0].childNodes[1].childNodes
+            choices[answer].click()
             if (shouldFail) {
                 choices[1].click()  // small chance it does not really fail but eh
             }
@@ -258,8 +291,17 @@ const colorEnabledDark = "#6dc8c2";
     async function once_loaded() {
         while (true) {
             let dropdownButton = document.getElementById('7sleeping-dropdown')
-            if (dropdownButton == undefined && document.getElementsByClassName("quiz__container") != undefined) {
+            if (document.getElementsByClassName("quiz__container") == undefined && document.getElementsByClassName("question_variant" == undefined)) {
+                continue
+            }
+
+            // we only do this the first time there's a quiz
+            if (dropdownButton == undefined) {
                 console.log("Found a quizz !")
+                if (document.getElementsByClassName("question_variant") != undefined) {
+                    console.log("[DEBUG] - TOEIC detected")
+                    isQuizzTOEIC = true
+                }
                 if (document.getElementsByClassName("stepper")[0] != undefined) {
                     document.getElementsByClassName("stepper")[0].innerHTML += menu7Sleeping
 
