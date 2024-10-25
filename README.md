@@ -28,7 +28,7 @@ Use this at your own risks, contributors can't be held accountable if your accou
 
 ## How to fix
 
-7sleeping can retrieve the answers from the client because the application uses design that leaks answers.
+7sleeping can retrieve the answers from the client because the application uses design that leaks answers, and stores the quizz result in the react bundle.
 
 Take this example, a snippet of react code from an imaginary server:
 ```javascript
@@ -44,7 +44,7 @@ class SecretClass extends React.Component {
 }
 ```
 
-When the render function will be executed, the client will be able to retrieve the whole SecretClass object and its attributes.
+When the js bundle will be sent to the client, we will be able to retrieve the whole SecretClass object and its attributes.
 ```javascript
 >> h2_tag.__reactFiber$1hbspvl3m9b.return.elementType.name
 "SecretClass" 
