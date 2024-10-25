@@ -200,6 +200,15 @@ const colorEnabledDark = "#6dc8c2";
                 console.log("[DEBUG] - Could not find the answer in the choices, exiting...")
                 return false
             }
+        } else if (quizzType == "matching") {
+            console.log("[DEBUG] - I don't know yet how to solve this quizz for you, but i know the answer order");
+            console.log("Answer is : ", getQuizzObject().answerOptions.answer)
+            return false
+        } else if (quizzType == "listening") {
+            console.log("[DEBUG] - I don't know yet how to solve this quizz for you, but i know the answer");
+            let index = getQuizzObject().answerOptions.answer[0]
+            console.log("Answer is : ", getQuizzObject().answerOptions.options[index])
+            return false
         }
 
         await sleep(randint(1000, delay * 1000))
