@@ -147,6 +147,9 @@ const colorEnabledDark = "#6dc8c2";
     }
 
     function getCurrentAnswer(quizz) {
+        if (getQuizzType(quizzObject) == "matching" || getQuizzType(quizzObject) == "listening") {
+            return quizz.answerOptions.answer
+        }
         return unifyString(quizz.answerOptions.answer[0].value)
     }
 
@@ -202,12 +205,11 @@ const colorEnabledDark = "#6dc8c2";
             }
         } else if (quizzType == "matching") {
             console.log("[DEBUG] - I don't know yet how to solve this quizz for you, but i know the answer order");
-            console.log("Answer is : ", getQuizzObject().answerOptions.answer)
+            console.log("Answer is : ", answer)
             return false
         } else if (quizzType == "listening") {
             console.log("[DEBUG] - I don't know yet how to solve this quizz for you, but i know the answer");
-            let index = getQuizzObject().answerOptions.answer[0]
-            console.log("Answer is : ", getQuizzObject().answerOptions.options[index])
+            console.log("Answer is : ", getQuizzObject().answerOptions.options[answer[0]])
             return false
         }
 
