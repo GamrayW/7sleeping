@@ -107,7 +107,7 @@ const colorEnabledDark = "#6dc8c2";
     let delay = 2
 
 
-    let allQuizzTypes = ["fill", "grammar", "choice"]
+    let allQuizzTypes = ["fill", "grammar", "choice", "matching", "listening"]
 
     /* CUSTOM FUNCTIONS */
     function unifyString(str) {
