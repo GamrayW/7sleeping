@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name                7sleeping
 // @namespace           .
-// @version             0.8
+// @version             0.9
 // @description         Automating solve of 7speaking tests
 // @updateURL           https://raw.githubusercontent.com/GamrayW/7sleeping/main/7sleeping.user.js
 // @downloadURL         https://raw.githubusercontent.com/GamrayW/7sleeping/main/7sleeping.user.js
@@ -204,13 +204,16 @@ const colorEnabledDark = "#6dc8c2";
                 return false
             }
         } else if (quizzType == "matching") {
+            // I believe this quizzType only appears on specific one time only exams, so for now i don't really bother
             console.log("[DEBUG] - I don't know yet how to solve this quizz for you, but i know the answer order");
             console.log("Answer is : ", answer)
             return false
         } else if (quizzType == "listening") {
-            console.log("[DEBUG] - I don't know yet how to solve this quizz for you, but i know the answer");
-            console.log("Answer is : ", getQuizzObject().answerOptions.options[answer[0]])
-            return false
+            let choices = quizz_form.childNodes[0].childNodes[0].childNodes[1].childNodes
+            choices[answer[0] - 1].click()
+            if (shouldFail) {
+                choices[1].click()  // small chance it does not really fail but eh
+            }
         }
 
         await sleep(randint(1000, delay * 1000))
